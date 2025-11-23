@@ -21,31 +21,31 @@
 
 ## Example Request
 
-1. generate from url site http://example.com transform to pdf
+generate from url site http://example.com transform to pdf
 
 ```
 curl 'http://localhost:8080/pdf'
 ```
 
-2. generate downloadable file docx filled with data object on `exampleService.loopTableData()`
+generate downloadable file docx filled with data object on `exampleService.loopTableData()`
 
 ```
 curl 'http://localhost:8080/docx'
 ```
 
-3. generate file docx filled with data object on `exampleService.loopTableData()` and convert to pdf file placed on output directory
+generate file docx filled with data object on `exampleService.loopTableData()` and convert to pdf file placed on output directory
 
 ```
 curl 'http://localhost:8080/docx-to-pdf'
 ```
 
-4. generate html with template engine with nunjucks filled with data object on `exampleService.exampleWithNestedObjectData()`
+generate html with template engine with nunjucks filled with data object on `exampleService.exampleWithNestedObjectData()`
 
 ```
 curl 'http://localhost:8080/njk'
 ```
 
-4. generate pdf from html with template engine with nunjucks filled with data object on `exampleService.exampleWithNestedObjectData()` printed as pdf
+generate pdf from html with template engine with nunjucks filled with data object on `exampleService.exampleWithNestedObjectData()` printed as pdf
 
 ```
 curl 'http://localhost:8080/njk-to-pdf'
