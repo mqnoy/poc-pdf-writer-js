@@ -5,8 +5,9 @@ const docxWritter = require("./docx-writter");
 const { serve } = require("@hono/node-server");
 const { writeFile } = require("fs/promises");
 const path = require("path");
-const exampleService = require("./services/exampleService");
+const exampleService = require("./services/example-service");
 const converter = require("./converter");
+const templateEngine = require("./template-engine");
 
 const appPort = process.env.PORT || 3000;
 
@@ -22,7 +23,10 @@ app.get("/pdf", async (c) => {
     const { output = "binary" } = c.req.query();
     console.info(`executed pdfWritter with output as ${output}`);
 
-    const result = await pdfWritter.run();
+    const response = await fetch("http://example.com/");
+    const html = await response.text();
+
+    const result = await pdfWritter.run(html);
 
     if (output === "file") {
       const outputDir = path.resolve(process.env.PDF_OUTPUT_DIR);
@@ -76,6 +80,44 @@ app.get("/docx-to-pdf", async (c) => {
     const outputDir = path.resolve(process.env.PDF_OUTPUT_DIR);
     await writeFile(path.join(outputDir, "docx_to_pdf.pdf"), pdfBuffer);
     await writeFile(path.join(outputDir, "docx_to_pdf.docx"), docxBuffer);
+
+    c.header("Content-Type", "application/pdf");
+    c.status(200);
+    return c.body(pdfBuffer);
+  } catch (error) {
+    console.error(error);
+    return c.status(500);
+  }
+});
+
+app.get("/njk", async (c) => {
+  try {
+    const data = await exampleService.exampleWithNestedObjectData();
+
+    const html = await templateEngine.nunjucksRender("table", {
+      data,
+    });
+
+    c.status(200);
+    return c.html(html);
+  } catch (error) {
+    console.error(error);
+    return c.status(500);
+  }
+});
+
+app.get("/njk-to-pdf", async (c) => {
+  try {
+    const data = await exampleService.exampleWithNestedObjectData();
+
+    const html = await templateEngine.nunjucksRender("table", {
+      data,
+    });
+
+    const pdfBuffer = await pdfWritter.run(html);
+
+    const outputDir = path.resolve(process.env.PDF_OUTPUT_DIR);
+    await writeFile(path.join(outputDir, "njk_to_pdf.pdf"), pdfBuffer);
 
     c.header("Content-Type", "application/pdf");
     c.status(200);
