@@ -1,0 +1,22 @@
+services:
+  pdf-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pdf-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: "development"
+      PUPPETEER_EXECUTABLE_PATH: "/opt/chromium/chrome-linux/chrome"
+      PDF_OUTPUT_DIR: "/opt/pdf/output"
+
+    volumes:
+      - ./output:/opt/pdf/output
+
+    ports:
+      - "8080:8080"
+    security_opt:
+      - seccomp:unconfined
+    cap_add:
+      - SYS_ADMIN
+    shm_size: "1gb"
