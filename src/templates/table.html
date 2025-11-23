@@ -1,0 +1,33 @@
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+      <tr>
+        <th>number</th>
+        <th>title</th>
+        <th>description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in data.rows %}
+        {% if row.child.length > 0 %}
+            <tr>
+                <td rowspan="{{ row.child.length + 1 }}">{{ row.number }}</td>
+                <td>{{ row.title }}</td>
+                <td>{{ row.description }}</td>
+            </tr>
+            {% for rowChild in row.child %}
+                <tr>
+                    <td>{{ rowChild.title }}</td>
+                    <td>{{ rowChild.description }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr {% if row.number < 18 %} style="background-color: #fdd;" {% endif %}>
+                <td>{{ row.number }}</td>
+                <td>{{ row.title }}</td>
+                <td>{{ row.description }}</td>
+            </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+  
